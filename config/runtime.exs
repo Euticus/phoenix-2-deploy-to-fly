@@ -16,22 +16,23 @@ if config_env() == :prod do
     server: true,
     url: [host: "#{app_name}.fly.dev", port: 80],
     http: [
+      ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: String.to_integer(System.get_env("PORT") || "4000"),
       # IMPORTANT: support IPv6 addresses
       transport_options: [socket_opts: [:inet6]]
     ],
     secret_key_base: secret_key_base
 
-#   database_url =
-#     System.get_env("DATABASE_URL") ||
-#       raise """
-#       environment variable DATABASE_URL is missing.
-#       For example: ecto://USER:PASS@HOST/DATABASE
-#       """
+  # database_url =
+  #   System.get_env("DATABASE_URL") ||
+  #     raise """
+  #     environment variable DATABASE_URL is missing.
+  #     For example: ecto://USER:PASS@HOST/DATABASE
+  #     """
 
-#   config :fly, Fly.Repo,
-#     url: database_url,
-#     # IMPORTANT: Or it won't find the DB server
-#     #socket_options: [:inet6],
-#     pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
+  # config :phoenix-2-deploy-to-fly, Phoenix2DeployToFlyWeb.Repo,
+  #   url: database_url,
+  #   # IMPORTANT: Or it won't find the DB server
+  #   socket_options: [:inet6],
+  #   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 end

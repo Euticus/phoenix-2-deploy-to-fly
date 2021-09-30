@@ -121,6 +121,7 @@ defmodule Fly.Client do
     """
     |> perform_query(%{id: id}, config, :get_template_deployment_status)
     |> handle_response()
+    |> broadcast(:state_updated)
     |> case do
       {:ok, %{"node" => %{"status" => status}}} ->
         Logger.info("Deployment status returned: #{inspect(status)}")
@@ -196,6 +197,16 @@ defmodule Fly.Client do
               memoryMb
             }
           }
+          allocations {
+            id
+            taskName
+            version
+            region
+            desiredStatus
+            status
+            restarts
+            createdAt
+          }
           releases(last: 5) {
             totalCount
             nodes {
@@ -215,6 +226,7 @@ defmodule Fly.Client do
     """
     |> perform_query(%{name: name}, config, :fetch_app)
     |> handle_response()
+    |> broadcast(:state_updated)
     |> case do
       {:ok, %{"app" => app}} ->
         Logger.info("app returned: #{inspect(app)}")
@@ -323,6 +335,13 @@ defmodule Fly.Client do
     url
     |> perform_http_get()
     |> handle_http_response()
+  end
+
+  defp broadcast({:error, _reason} = error, _event), do: error
+
+  defp broadcast({:ok, get}, event) do
+    Phoenix.PubSub.broadcast(Fly.PubSub, "stateUpdates", {event, get}) 
+    {:ok, get}
   end
 
   defp handle_http_response({:ok, %HTTPoison.Response{status_code: 200}}) do

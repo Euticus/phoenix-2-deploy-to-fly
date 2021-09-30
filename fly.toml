@@ -1,13 +1,14 @@
-# fly.toml file generated for flyio-ui-ex on 2021-08-26T16:42:20-05:00
+# fly.toml file generated for little-sound-5467 on 2021-09-30T12:24:23-07:00
 
-app = "flyio-ui-ex"
+app = "little-sound-5467"
 
 kill_signal = "SIGTERM"
 kill_timeout = 5
 processes = []
 
 [env]
-auto_rollback = false
+  auto_rollback = false
+  PORT = 8080
 
 [experimental]
   allowed_public_ports = []
@@ -15,7 +16,7 @@ auto_rollback = false
 
 [[services]]
   http_checks = []
-  internal_port = 4000
+  internal_port = 8080
   processes = ["app"]
   protocol = "tcp"
   script_checks = []

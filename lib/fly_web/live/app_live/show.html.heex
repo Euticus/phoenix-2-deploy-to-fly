@@ -42,11 +42,38 @@
               </div>
               <div class="mt-2 flex items-center text-sm text-gray-500">
                 <div class="ml-2 flex-shrink-0 flex">
-
+                <%=  @app["deploymentStatus"]["id"] %>
                 </div>
               </div>
             </div>
           </div>
+          <%= if @deployment_status do %> <!-- Cannot get this to be properly assigned on mount, if it was this is how I'd show it on the page -->
+          <div class="flex-1 min-w-0">
+            <h2 class="text-2xl font-bold leading-7 text-white-900 sm:text-3xl sm:truncate">
+              <p> Deployment Status: </p>
+              <%= @deployment_status["id"] %>
+              <p class={"px-2 mx-4 inline-flex text-xs leading-5 font-semibold rounded-full #{status_bg_color(@app)} #{status_text_color(@app)}"}>
+                <%= @deployment_status["version"] %>
+              </p>
+            </h2>
+            <div class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
+              <div class="mt-2 flex items-center text-sm text-gray-500">
+                <%= @deployment_status["status"] %>
+              </div>
+              <div class="mt-2 flex items-center text-sm text-gray-500">
+                <div class="ml-2 flex-shrink-0 flex">
+                  <%=  @deployment_status["description"] %>
+                </div>
+                <div class="ml-2 flex-shrink-0 flex">
+                  <%=  @deployment_status["allocations"] %>
+                </div>
+                <div class="ml-2 flex-shrink-0 flex">
+                  <%=  @app["deploymentStatus"]["description"] %>
+                </div>
+              </div>
+            </div>
+          </div>
+          <% end %>
           <div class="mt-5 flex lg:mt-0 lg:ml-4">
             <%= if @app["deployed"] == true do %>
               <span class="hidden sm:block ml-3">
@@ -109,6 +136,102 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                       <%= pg["vmSize"]["name"] %>
                                     </td>
+                                  </tr>
+                                <% end %>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </dd>
+                </div>
+              </div>
+            </div>
+          </section>
+          <section>
+            <div class="bg-white shadow sm:rounded-lg">
+              <div class="px-4 py-5 sm:px-6">
+                <h2 class="text-lg leading-6 font-medium text-gray-900">
+                  Instances
+                </h2>
+              </div>
+              <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
+                <div class="sm:col-span-2">
+                  <dd class="mt-1 text-sm text-gray-900">
+                    <div class="flex flex-col">
+                      <div class="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+                        <div class="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                          <div class="overflow-hidden border-b border-gray-200">
+                            <table class="min-w-full divide-y divide-gray-200">
+                              <thead class="bg-gray-50">
+                                <tr>
+                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    ID
+                                  </th>
+                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    TASK
+                                  </th>
+                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    VERSION
+                                  </th>
+                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    REGION
+                                  </th>
+                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    DESIRED
+                                  </th>
+                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    STATUS
+                                  </th>
+                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    HEALTH
+                                  </th>
+                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    CHECKS
+                                  </th>
+                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    RESTARTS
+                                  </th>
+                                  <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    CREATED
+                                  </th>
+                                </tr>
+                              </thead>
+                              <tbody class="bg-white divide-y divide-gray-200">
+                                <%= for al <- @app["allocations"] do %>
+                                  <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                      <%= al["id"] %>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                      <%= al["taskName"] %>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                      <%= al["version"] %>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                      <%= al["region"] %>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                      <%= al["desiredStatus"] %>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                      <%= al["status"] %>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                      <%= al["health"] %>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                      <%= al["checks"] %>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                      <%= al["restarts"] %>
+                                    </td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                      <%= al["createdAt"] %>
+                                    </td>
+
                                   </tr>
                                 <% end %>
                               </tbody>

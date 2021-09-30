@@ -11,6 +11,8 @@ defmodule FlyWeb.AppLive.Show do
       assign(socket,
         config: client_config(session),
         state: :loading,
+        deployment_status: nil, 
+        deployment_status_id: nil, 
         app: nil,
         app_name: name,
         count: 0,
@@ -44,6 +46,25 @@ defmodule FlyWeb.AppLive.Show do
 
         put_flash(socket, :error, reason)
     end
+  end
+
+    defp get_template_deployment_status(socket) do
+
+    deployment_status_id = socket.assigns.deployment_status_id
+
+    case Client.get_template_deployment_status(deployment_status_id, socket.assigns.config) do
+      {:ok, deployment_status} ->
+        assign(socket, :deployment_status, deployment_status)
+
+      {:error, :unauthorized} ->
+        put_flash(socket, :error, "Not authenticated")
+
+      {:error, reason} ->
+        Logger.error("Failed to load app '#{inspect(deployment_status_id)}'. Reason: #{inspect(reason)}")
+
+        put_flash(socket, :error, reason)
+    end
+
   end
 
   @impl true
